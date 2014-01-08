@@ -1,24 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <script src="jquery.js"></script>
     <script src="underscore.js"></script>
     <script src="backbone.js"></script>
-    <script>
-      var router = Backbone.Router.extend({
-        routes: {
-          '': 'home'
-        },
-        home: function(){
-          //todo: render HTML
 
-        }
-      });
+    <script>
+
+    //fake data - fake REST endpoint-substitute
+
+    //array of apple objects
+
+    var appleData = [
+      {
+        name: 'fuji',
+        url: 'img/fuji.jpg'
+      },
+      {
+        name: 'gala',
+        url: 'img/gala.jpg'
+      }
+    ];
+
+
+
+
+    //the BACKBONE
+
+    var app;
+
+    //ROUTER
+
+    var router = Backbone.Router.extend({
+      routes: {
+        '': 'home' //does this need a property name???
+      },
+      initialize: function(){
+        //executed upon objecinstantiation
+      },
+      home: function(){
+        this.homeView = new homeView();
+        this.homeView.render();
+      }
+    });
+
+    //VIEWS
+
+    var homeView = Backbone.View.extend({
+      el: 'body', //CSS API
+      template: _.template('Hello World'), //interpolate JSON
+      render: function(){
+        this.$el.html(this.template({})); //compile jQ obj -> load template
+        console.log(this.template({}));
+      }
+    });
+
+    // MISSILES!
+
+    $(document).ready(function(){
+      alert("woop");
+      app = new router; //why the fuck does this work? router = object
+      Backbone.history.start(); // manipulate URL history
+    });
+
 
     </script>
 
   </head>
   <body>
-
+    umm
+    <div></div>
   </body>
 </html>
