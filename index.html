@@ -33,34 +33,70 @@
 
     var router = Backbone.Router.extend({
       routes: {
-        '': 'home' //does this need a property name???
+        '': 'home',
+        'apples/:appleName' : 'loadApple'
+
       },
       initialize: function(){
-        //executed upon objecinstantiation
+        //executed upon object instantiation
+        var apples = new Apples(); // new collection
+        apples.reset(appleData);;  // pass models to collection
+
+        this.homeView = new homeView({collection: apples});
+        this.appleView = new appleView({collection:apples});
       },
+
+      loadApple: function(appleName){
+        this.appleView.render(appleName);
+      },
+
+
       home: function(){
-        this.homeView = new homeView();
         this.homeView.render();
       }
     });
 
     //VIEWS
 
+      //homeView
+
     var homeView = Backbone.View.extend({
       el: 'body', //CSS API
-      template: _.template('Hello World'), //interpolate JSON
+      template: _.template('Apple Data: <%= data %>'), //interpolate JSON
       render: function(){
-        this.$el.html(this.template({})); //compile jQ obj -> load template
-        console.log(this.template({}));
+        this.$el.html(this.template({
+          data: JSON.stringify(this.collection.models)
+        }));
       }
     });
+
+      //apple View
+
+    var appleView = Backbone.View.extend({
+      template: _.template(
+        '<figure>'
+          + '<img src="<%= attributes.url %>"'
+          + '<figcaption>' + '<%= attributes.name =>' + '</figcaption>'
+        +'</figure>'),
+
+      render: function(appleName){
+        var appleModel = this.collection.where({name: appleName})[0];
+        var appleHtml = this.template(appleModel);
+        $('body').html(appleHtml);
+      }
+    });
+
+    //COLLECTIONS
+
+    var Apples = Backbone.Collection.extend({
+
+    })
 
     // MISSILES!
 
     $(document).ready(function(){
-      alert("woop");
       app = new router; //why the fuck does this work? router = object
-      Backbone.history.start(); // manipulate URL history
+      Backbone.history.start(); // browser history API tyme
     });
 
 
